@@ -73,6 +73,25 @@ public class Fraction {
         return this.multiply(other.reciprocal());
     }
 
+    public static Fraction parseFraction(String fractionStr) {
+        if (fractionStr.contains("'")) {
+            String[] parts = fractionStr.split("'");
+            int wholePart = Integer.parseInt(parts[0]);
+            String fractionalPart = parts[1];
+            return parseFraction(fractionalPart).add(new Fraction(wholePart));
+        }
+
+        if (fractionStr.contains("/")) {
+            String[] parts = fractionStr.split("/");
+            int numerator = Integer.parseInt(parts[0]);
+            int denominator = Integer.parseInt(parts[1]);
+            return new Fraction(numerator, denominator);
+        }
+
+        return new Fraction(Integer.parseInt(fractionStr));
+    }
+
+
     @Override
     public String toString() {
         // 如果分母为1，直接返回分子
@@ -95,5 +114,8 @@ public class Fraction {
         return numerator + "/" + denominator;
     }
 
+    public boolean isNegative() {
+        return numerator < 0;
+    }
 }
 
