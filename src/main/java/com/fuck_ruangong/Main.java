@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.StringTokenizer;
 
@@ -83,7 +84,7 @@ public class Main {
     }
 
     /**
-     * 计算后缀表达式
+     * 计算后缀表达式， 如果出现负数，返回null
      *
      * @param postfix 后缀表达式
      * @return 计算结果
@@ -96,9 +97,14 @@ public class Main {
             if (isNumber(token)) {
                 stack.push(Fraction.parseFraction(token));
             } else if (isOperator(token.charAt(0))) {
-                Fraction operand1 = stack.pop();
                 Fraction operand2 = stack.pop();
-                stack.push(calculate(operand2, operand1, token.charAt(0)));
+                Fraction operand1 = stack.pop();
+                Fraction result = calculate(operand1, operand2, token.charAt(0));
+                if (result.isNegative()) {
+                    // 负数
+                    return null;
+                }
+                stack.push(result);
             }
         }
         return stack.pop();
@@ -157,41 +163,49 @@ public class Main {
      *
      * @param range        操作数的大小范围
      * @param maxOperators 操作符的最大数量
-     * @return 算数表达式
      */
-    public static String generateQuiz(int range, int maxOperators) {
-        List<String> operands = new ArrayList<>();
-        List<String> operators = new ArrayList<>();
+    public static void generateQuiz(int range, int maxOperators) {
+        do {
+            List<String> operands = new ArrayList<>();
+            List<String> operators = new ArrayList<>();
 
-        // 随机生成操作数和运算符
-        for (int i = 0; i < maxOperators + 1; i++) {
-            String lastOperator;
-            if (operators.isEmpty()) {
-                lastOperator = "";
-            } else {
-                lastOperator = operators.get(operators.size() - 1);
+            // 随机生成操作数和运算符
+            for (int i = 0; i < maxOperators + 1; i++) {
+                String lastOperator;
+                if (operators.isEmpty()) {
+                    lastOperator = "";
+                } else {
+                    lastOperator = operators.get(operators.size() - 1);
+                }
+                Fraction operand = generateRandomOperand(lastOperator, range);
+                operands.add(operand.toString());
+                if (i < maxOperators) {
+                    operators.add(generateRandomOperator());
+                }
             }
-            Fraction operand = generateRandomOperand(lastOperator, range);
-            operands.add(operand.toString());
-            if (i < maxOperators) {
-                operators.add(generateRandomOperator());
-            }
-        }
 
-        StringBuilder quiz = new StringBuilder();
-        for (int i = 0; i < operands.size(); i++) {
-            quiz.append(operands.get(i));
-            if (i < operators.size()) {
-                quiz.append(" ").append(operators.get(i)).append(" ");
+            StringBuilder quiz = new StringBuilder();
+            for (int i = 0; i < operands.size(); i++) {
+                quiz.append(operands.get(i));
+                if (i < operators.size()) {
+                    quiz.append(" ").append(operators.get(i)).append(" ");
+                }
             }
-        }
-        String expression = quiz.toString();
+            String expression = quiz.toString();
 
-        // 随机决定是否包含括号
-        if (operands.size() > 2 && RANDOM.nextBoolean()) {
-            expression = addRandomParentheses(expression);
-        }
-        return expression;
+            // 随机决定是否包含括号
+            if (operands.size() > 2 && RANDOM.nextBoolean()) {
+                expression = addRandomParentheses(expression);
+            }
+
+            String postfix = infixToPostfix(expression);
+            Fraction result;
+            if (Objects.nonNull(result = evaluatePostfix(postfix))) {
+                // 计算过程中没有出现负数，结束循环
+                System.out.println(expression + " = " + result);
+                break;
+            }
+        } while (true);
     }
 
     /**
@@ -282,15 +296,8 @@ public class Main {
             }
         }
         // 生成10个题目
-        List<String> quizzes = new ArrayList<>();
-
         for (int i = 0; i < numberOfQuestions; i++) {
-            quizzes.add(generateQuiz(range, generateRandomOperatorCounts()));
+            generateQuiz(range, generateRandomOperatorCounts());
         }
-        quizzes.forEach(quiz -> {
-            String postfix = infixToPostfix(quiz);
-            Fraction fraction = evaluatePostfix(postfix);
-            System.out.println(quiz + " = " + fraction);
-        });
     }
 }
