@@ -1,4 +1,4 @@
-# Fuck_RuanGong
+# 结对项目：四则运算题目生成
 | 这个作业属于哪个课程 | [22级计科1班](https://edu.cnblogs.com/campus/gdgy/CSGrade22-12) |
 | -------------------- | ------------------------------------------------------------ |
 | 这个作业要求在哪里   | [作业要求](https://edu.cnblogs.com/campus/gdgy/CSGrade22-12/homework/13221) |
