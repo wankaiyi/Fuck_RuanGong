@@ -12,14 +12,22 @@ public class Main {
     private static final String[] OPERATORS = {"+", "-", "×", "÷"};
     private static final Random RANDOM = new Random();
 
-    // 随机生成真分数
+    /**
+     * 随机生成真分数
+     * @param range 范围
+     * @return 随机生成的真分数
+     */
     public static Fraction generateRandomFraction(int range) {
         int numerator = RANDOM.nextInt(range) + 1;
         int denominator = RANDOM.nextInt(range) + 1;
         return new Fraction(numerator, denominator);
     }
 
-    // 随机生成自然数或真分数
+    /**
+     * 随机生成自然数或真分数
+     * @param range 范围
+     * @return 随机生成的自然数或真分数
+     */
     public static Fraction generateRandomOperand(int range) {
         if (RANDOM.nextBoolean()) {
             // 真分数
@@ -30,28 +38,103 @@ public class Main {
         }
     }
 
-    // 随机生成运算符
+    /**
+     * 随机生成运算符
+     */
     public static String generateRandomOperator() {
         return OPERATORS[RANDOM.nextInt(OPERATORS.length)];
     }
 
-    // 生成题目并计算答案
-    public static String generateQuiz(int range) {
-        // 生成两个随机操作数
-        Fraction operand1 = generateRandomOperand(range);
-        Fraction operand2 = generateRandomOperand(range);
 
-        // 生成运算符
-        String operator = generateRandomOperator();
-
-        // 计算结果
-        Fraction result = calculate(operand1, operand2, operator);
-
-        // 返回题目与答案
-        return String.format("%s %s %s = %s", operand1, operator, operand2, result);
+    /**
+     * 随机生成运算符数量
+     */
+    public static int generateRandomOperatorCounts() {
+        return RANDOM.nextInt(3) + 1;
     }
 
-    // 进行四则运算
+    /**
+     * 生成题目
+     * @param range 操作数的大小范围
+     * @param maxOperators 操作符的最大数量
+     * @return 算数表达式
+     */
+    public static String generateQuiz(int range, int maxOperators) {
+        List<String> operands = new ArrayList<>();
+        List<String> operators = new ArrayList<>();
+
+        // 随机生成操作数和运算符
+        for (int i = 0; i < maxOperators + 1; i++) {
+            operands.add(generateRandomOperand(range).toString());
+            if (i < maxOperators) {
+                operators.add(generateRandomOperator());
+            }
+        }
+
+        StringBuilder quiz = new StringBuilder();
+        for (int i = 0; i < operands.size(); i++) {
+            quiz.append(operands.get(i));
+            if (i < operators.size()) {
+                quiz.append(" ").append(operators.get(i)).append(" ");
+            }
+        }
+        String expression = quiz.toString();
+
+        // 随机决定是否包含括号
+        if (RANDOM.nextBoolean()) {
+            expression = addRandomParentheses(expression);
+        }
+        return expression;
+    }
+
+    /**
+     * 随机添加括号，只给加法或减法的子表达式加括号
+     * @param expression 算数表达式
+     * @return 带括号的表达式
+     */
+    private static String addRandomParentheses(String expression) {
+        String[] tokens = expression.split(" ");
+        StringBuilder result = new StringBuilder();
+        List<Integer> addSubIndices = new ArrayList<>();
+
+        // 收集所有加法和减法运算符的位置
+        for (int i = 1; i < tokens.length; i += 2) {
+            String operator = tokens[i];
+            if ("+".equals(operator) || "-".equals(operator)) {
+                addSubIndices.add(i);
+            }
+        }
+
+        // 随机选择一个加法或减法的位置进行括号插入
+        if (!addSubIndices.isEmpty()) {
+            int index = addSubIndices.get(RANDOM.nextInt(addSubIndices.size()));
+            for (int i = 0; i < tokens.length; i++) {
+                if (i == index - 1) {
+                    result.append("(");
+                }
+                result.append(tokens[i]);
+                if (i == index + 1) {
+                    result.append(")");
+                } else if (i < tokens.length - 1) {
+                    result.append(" ");
+                }
+            }
+        } else {
+            // 如果没有加法或减法运算符，返回原始表达式
+            result.append(expression);
+        }
+
+        return result.toString();
+    }
+
+    /**
+     * 进行四则运算
+     *
+     * @param operand1 第一个操作数
+     * @param operand2 第二个操作数
+     * @param operator 运算符
+     * @return 运算结果
+     */
     public static Fraction calculate(Fraction operand1, Fraction operand2, String operator) {
         switch (operator) {
             case "+":
@@ -94,7 +177,7 @@ public class Main {
         List<String> quizzes = new ArrayList<>();
 
         for (int i = 0; i < numberOfQuestions; i++) {
-            quizzes.add(generateQuiz(range));
+            quizzes.add(generateQuiz(range, generateRandomOperatorCounts()));
         }
         quizzes.forEach(System.out::println);
     }
