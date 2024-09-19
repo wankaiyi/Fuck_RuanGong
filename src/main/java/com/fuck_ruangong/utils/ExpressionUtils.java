@@ -102,4 +102,21 @@ public class ExpressionUtils {
         }
         return stack.pop();
     }
+
+    public static Fraction evaluatePostfixAllowNegative(String postfix) {
+        Deque<Fraction> stack = new LinkedList<>();
+        String[] tokens = postfix.split(" ");
+
+        for (String token : tokens) {
+            if (isNumber(token)) {
+                stack.push(Fraction.parseFraction(token));
+            } else if (isOperator(token.charAt(0))) {
+                Fraction operand2 = stack.pop();
+                Fraction operand1 = stack.pop();
+                Fraction result = FractionUtils.calculate(operand1, operand2, token.charAt(0));
+                stack.push(result);
+            }
+        }
+        return stack.pop();
+    }
 }
