@@ -1,6 +1,7 @@
 package com.fuck_ruangong.utils;
 
 import com.fuck_ruangong.entity.Fraction;
+import groovy.lang.Tuple2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +35,9 @@ public class QuizGenerator {
      *
      * @param range        操作数的大小范围
      * @param maxOperators 操作符的最大数量
+     * @return 题目，答案
      */
-    public static void generateQuiz(int range, int maxOperators) {
+    public static Tuple2<String, String> generateQuiz(int range, int maxOperators) {
         do {
             List<String> operands = new ArrayList<>();
             List<String> operators = new ArrayList<>();
@@ -65,8 +67,7 @@ public class QuizGenerator {
             String postfix = ExpressionUtils.infixToPostfix(expression);
             Fraction result = ExpressionUtils.evaluatePostfix(postfix);
             if (Objects.nonNull(result) && !DuplicateChecker.isDuplicate(result, expression)) {
-                System.out.println(expression + " = " + result);
-                break;
+                return new Tuple2<>(expression, result.toString());
             }
         } while (true);
     }
