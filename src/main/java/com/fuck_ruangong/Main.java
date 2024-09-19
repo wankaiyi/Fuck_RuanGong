@@ -18,42 +18,46 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Main {
 
     public static void main(String[] args) {
-        // 校验参数
-        Args argsObj = ValidationUtils.validateArgs(args);
-        int numberOfQuestions = argsObj.getNumberOfQuestions();
-        int range = argsObj.getRange();
+        try {
+            // 校验参数
+            Args argsObj = ValidationUtils.validateArgs(args);
+            int numberOfQuestions = argsObj.getNumberOfQuestions();
+            int range = argsObj.getRange();
 
-        // 判题
-        checkExercisesAnswers(argsObj.getExercisesFileName(), argsObj.getAnswerFileName());
+            // 判题
+            checkExercisesAnswers(argsObj.getExercisesFileName(), argsObj.getAnswerFileName());
 
-        System.out.printf("即将生成题目，题目个数：" + numberOfQuestions + "，数据范围：0~%d\n", range - 1);
-        // 生成 numberOfQuestions 个题目
-        List<Tuple2<String, String>> quizzes = new ArrayList<>();
-        for (int i = 0; i < numberOfQuestions; i++) {
-            Tuple2<String, String> quizAndAnswer = QuizGenerator.generateQuiz(range - 1, QuizGenerator.generateRandomOperatorCounts());
-            quizzes.add(quizAndAnswer);
+            System.out.printf("即将生成题目，题目个数：" + numberOfQuestions + "，数据范围：0~%d\n", range - 1);
+            // 生成 numberOfQuestions 个题目
+            List<Tuple2<String, String>> quizzes = new ArrayList<>();
+            for (int i = 0; i < numberOfQuestions; i++) {
+                Tuple2<String, String> quizAndAnswer = QuizGenerator.generateQuiz(range - 1, QuizGenerator.generateRandomOperatorCounts());
+                quizzes.add(quizAndAnswer);
+            }
+            String generateExercisesFilePath = System.getProperty("user.dir") + "/Exercises.txt";
+            String generateAnswerFilePath = System.getProperty("user.dir") + "/Answers.txt";
+
+            // 删除文件
+            File exercisesFile = new File(generateExercisesFilePath);
+            File answerFile = new File(generateAnswerFilePath);
+
+            FileUtils.deleteFileIfExists(exercisesFile.getName());
+            FileUtils.deleteFileIfExists(answerFile.getName());
+
+            AtomicReference<Integer> count = new AtomicReference<>(1);
+            quizzes.forEach(tuple2 -> {
+                String quiz = tuple2.getFirst();
+                String answer = tuple2.getSecond();
+
+                // 使用 appendString 方法追加内容
+                FileUtil.appendUtf8String(count.get() + ". " + quiz + "\n", exercisesFile);
+                FileUtil.appendUtf8String(count.get() + ". " + answer + "\n", answerFile);
+
+                count.getAndSet(count.get() + 1);
+            });
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
-        String generateExercisesFilePath = System.getProperty("user.dir") + "/Exercises.txt";
-        String generateAnswerFilePath = System.getProperty("user.dir") + "/Answers.txt";
-
-        // 删除文件
-        File exercisesFile = new File(generateExercisesFilePath);
-        File answerFile = new File(generateAnswerFilePath);
-
-        FileUtils.deleteFileIfExists(exercisesFile.getName());
-        FileUtils.deleteFileIfExists(answerFile.getName());
-
-        AtomicReference<Integer> count = new AtomicReference<>(1);
-        quizzes.forEach(tuple2 -> {
-            String quiz = tuple2.getFirst();
-            String answer = tuple2.getSecond();
-
-            // 使用 appendString 方法追加内容
-            FileUtil.appendUtf8String(count.get() + ". " + quiz + "\n", exercisesFile);
-            FileUtil.appendUtf8String(count.get() + ". " + answer + "\n", answerFile);
-
-            count.getAndSet(count.get() + 1);
-        });
     }
 
     /**
