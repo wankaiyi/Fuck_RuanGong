@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class Main {
 
@@ -29,11 +28,7 @@ public class Main {
 
             System.out.printf("即将生成题目，题目个数：" + numberOfQuestions + "，数据范围：0~%d\n", range - 1);
             // 生成 numberOfQuestions 个题目
-            List<Tuple2<String, String>> quizzes = new ArrayList<>();
-            for (int i = 0; i < numberOfQuestions; i++) {
-                Tuple2<String, String> quizAndAnswer = QuizGenerator.generateQuiz(range - 1, QuizGenerator.generateRandomOperatorCounts());
-                quizzes.add(quizAndAnswer);
-            }
+            Tuple2<List<String>, List<String>> quizAndAnswers = QuizGenerator.generateQuiz(range - 1, QuizGenerator.generateRandomOperatorCounts(), numberOfQuestions);
             String generateExercisesFilePath = System.getProperty("user.dir") + "/Exercises.txt";
             String generateAnswerFilePath = System.getProperty("user.dir") + "/Answers.txt";
 
@@ -44,17 +39,9 @@ public class Main {
             FileUtils.deleteFileIfExists(exercisesFile.getName());
             FileUtils.deleteFileIfExists(answerFile.getName());
 
-            AtomicReference<Integer> count = new AtomicReference<>(1);
-            quizzes.forEach(tuple2 -> {
-                String quiz = tuple2.getFirst();
-                String answer = tuple2.getSecond();
-
-                // 使用 appendString 方法追加内容
-                FileUtil.appendUtf8String(count.get() + ". " + quiz + "\n", exercisesFile);
-                FileUtil.appendUtf8String(count.get() + ". " + answer + "\n", answerFile);
-
-                count.getAndSet(count.get() + 1);
-            });
+            // 将题目和答案写入文件
+            FileUtil.writeUtf8Lines(quizAndAnswers.getFirst(), exercisesFile);
+            FileUtil.writeUtf8Lines(quizAndAnswers.getSecond(), answerFile);
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }

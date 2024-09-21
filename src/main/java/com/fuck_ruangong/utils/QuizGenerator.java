@@ -31,45 +31,65 @@ public class QuizGenerator {
     }
 
     /**
-     * 随机生成题目
+     * 随机生成单个题目
      *
-     * @param range        操作数的大小范围
-     * @param maxOperators 操作符的最大数量
+     * @param range             操作数的大小范围
+     * @param maxOperators      操作符的最大数量
+     * @param numberOfQuestions 最大题目数
      * @return 题目，答案
      */
-    public static Tuple2<String, String> generateQuiz(int range, int maxOperators) {
-        do {
-            List<String> operands = new ArrayList<>();
-            List<String> operators = new ArrayList<>();
+    public static Tuple2<List<String>, List<String>> generateQuiz(int range, int maxOperators, int numberOfQuestions) {
+        int duplicateCount = 0;
+        int negativeCount = 0;
+        int totalCount = 0;
 
-            for (int i = 0; i < maxOperators + 1; i++) {
-                String lastOperator = operators.isEmpty() ? "" : operators.get(operators.size() - 1);
-                Fraction operand = FractionUtils.generateRandomOperand(lastOperator, range);
-                operands.add(operand.toString());
-                if (i < maxOperators) {
-                    operators.add(generateRandomOperator());
+        List<String> quizzes = new ArrayList<>(numberOfQuestions);
+        List<String> answers = new ArrayList<>(numberOfQuestions);
+        for (int i = 1; i <= numberOfQuestions; i++) {
+            while (true) {
+                totalCount++;
+                List<String> operands = new ArrayList<>();
+                List<String> operators = new ArrayList<>();
+
+                for (int j = 0; j < maxOperators + 1; j++) {
+                    String lastOperator = operators.isEmpty() ? "" : operators.get(operators.size() - 1);
+                    Fraction operand = FractionUtils.generateRandomOperand(lastOperator, range);
+                    operands.add(operand.toString());
+                    if (j < maxOperators) {
+                        operators.add(generateRandomOperator());
+                    }
+                }
+
+                StringBuilder quiz = new StringBuilder();
+                for (int j = 0; j < operands.size(); j++) {
+                    quiz.append(operands.get(j));
+                    if (j < operators.size()) {
+                        quiz.append(" ").append(operators.get(j)).append(" ");
+                    }
+                }
+                String expression = quiz.toString();
+
+                if (operands.size() > 2 && RANDOM.nextBoolean()) {
+                    expression = addRandomParentheses(expression);
+                }
+
+                String postfix = ExpressionUtils.infixToPostfix(expression);
+                Fraction result = ExpressionUtils.evaluatePostfix(postfix);
+                if (Objects.nonNull(result)) {
+                    if (!DuplicateChecker.isDuplicate(result, expression)) {
+                        quizzes.add(i + ". " + expression);
+                        answers.add(i + ". " + result);
+                        break;
+                    } else {
+                        duplicateCount++;
+                    }
+                } else {
+                    negativeCount++;
                 }
             }
-
-            StringBuilder quiz = new StringBuilder();
-            for (int i = 0; i < operands.size(); i++) {
-                quiz.append(operands.get(i));
-                if (i < operators.size()) {
-                    quiz.append(" ").append(operators.get(i)).append(" ");
-                }
-            }
-            String expression = quiz.toString();
-
-            if (operands.size() > 2 && RANDOM.nextBoolean()) {
-                expression = addRandomParentheses(expression);
-            }
-
-            String postfix = ExpressionUtils.infixToPostfix(expression);
-            Fraction result = ExpressionUtils.evaluatePostfix(postfix);
-            if (Objects.nonNull(result) && !DuplicateChecker.isDuplicate(result, expression)) {
-                return new Tuple2<>(expression, result.toString());
-            }
-        } while (true);
+        }
+        System.out.println("生成" + numberOfQuestions + "道题目完成，总次数：" + totalCount + "，重复次数：" + duplicateCount + "，负数次数：" + negativeCount);
+        return new Tuple2<>(quizzes, answers);
     }
 
     /**
