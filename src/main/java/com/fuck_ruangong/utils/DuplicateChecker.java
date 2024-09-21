@@ -21,7 +21,7 @@ public class DuplicateChecker {
         // 已创建的表达式中，如果有计算结果相同，且表达式中的所有字符和出现的次数都一样，就认为是重复的
         String resultStr = result.toString();
         String trimmedExpression = expression.trim();
-        Integer length = expression.length();
+        Integer length = trimmedExpression.length();
 
         // 统计表达式中每个字符出现的次数
         Map<Character, Integer> characterCountMap = trimmedExpression.chars()
