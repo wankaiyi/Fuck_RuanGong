@@ -18,8 +18,10 @@ public class FractionUtils {
      * @return 随机生成的真分数
      */
     public static Fraction generateRandomFraction(int range) {
-        int numerator = RANDOM.nextInt(range) + 1;
-        int denominator = RANDOM.nextInt(range) + 1;
+        // 0 ~ range - 1
+        int numerator = RANDOM.nextInt(range);
+        // 1 ~ range - 1
+        int denominator = RANDOM.nextInt(range - 1) + 1;
         return new Fraction(numerator, denominator);
     }
 
@@ -38,7 +40,7 @@ public class FractionUtils {
             // 自然数
             if ("÷".equals(operator)) {
                 // 防止被除数为0
-                return new Fraction(RANDOM.nextInt(range) + 1);
+                return new Fraction(RANDOM.nextInt(range - 1) + 1);
             }
             return new Fraction(RANDOM.nextInt(range));
         }

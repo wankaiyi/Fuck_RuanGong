@@ -28,7 +28,7 @@ public class Main {
 
             System.out.printf("即将生成题目，题目个数：" + numberOfQuestions + "，数据范围：0~%d\n", range - 1);
             // 生成 numberOfQuestions 个题目
-            Tuple2<List<String>, List<String>> quizAndAnswers = QuizGenerator.generateQuiz(range - 1, QuizGenerator.generateRandomOperatorCounts(), numberOfQuestions);
+            Tuple2<List<String>, List<String>> quizAndAnswers = QuizGenerator.generateQuiz(range, QuizGenerator.generateRandomOperatorCounts(), numberOfQuestions);
             String generateExercisesFilePath = System.getProperty("user.dir") + "/Exercises.txt";
             String generateAnswerFilePath = System.getProperty("user.dir") + "/Answers.txt";
 
