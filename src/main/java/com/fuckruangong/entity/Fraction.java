@@ -1,4 +1,4 @@
-package com.fuck_ruangong.entity;
+package com.fuckruangong.entity;
 
 public class Fraction {
     /**

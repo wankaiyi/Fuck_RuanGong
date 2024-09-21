@@ -1,6 +1,6 @@
-package com.fuck_ruangong.utils;
+package com.fuckruangong.utils;
 
-import com.fuck_ruangong.entity.Args;
+import com.fuckruangong.entity.Args;
 import org.apache.commons.lang3.StringUtils;
 
 public class ValidationUtils {

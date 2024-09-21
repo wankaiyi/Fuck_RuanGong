@@ -1,6 +1,6 @@
-package com.fuck_ruangong.utils;
+package com.fuckruangong.utils;
 
-import com.fuck_ruangong.entity.Fraction;
+import com.fuckruangong.entity.Fraction;
 import groovy.lang.Tuple2;
 
 import java.util.ArrayList;

@@ -1,12 +1,12 @@
-package com.fuck_ruangong;
+package com.fuckruangong;
 
 import cn.hutool.core.io.FileUtil;
-import com.fuck_ruangong.entity.Args;
-import com.fuck_ruangong.entity.Fraction;
-import com.fuck_ruangong.utils.ExpressionUtils;
-import com.fuck_ruangong.utils.FileUtils;
-import com.fuck_ruangong.utils.QuizGenerator;
-import com.fuck_ruangong.utils.ValidationUtils;
+import com.fuckruangong.entity.Args;
+import com.fuckruangong.entity.Fraction;
+import com.fuckruangong.utils.ExpressionUtils;
+import com.fuckruangong.utils.FileUtils;
+import com.fuckruangong.utils.QuizGenerator;
+import com.fuckruangong.utils.ValidationUtils;
 import groovy.lang.Tuple2;
 import org.apache.commons.lang3.StringUtils;
 

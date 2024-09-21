@@ -1,6 +1,6 @@
-package com.fuck_ruangong.utils;
+package com.fuckruangong.utils;
 
-import com.fuck_ruangong.entity.Fraction;
+import com.fuckruangong.entity.Fraction;
 
 import java.util.ArrayList;
 import java.util.HashMap;

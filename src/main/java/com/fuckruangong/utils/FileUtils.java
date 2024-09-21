@@ -1,4 +1,4 @@
-package com.fuck_ruangong.utils;
+package com.fuckruangong.utils;
 
 import java.io.File;
 
