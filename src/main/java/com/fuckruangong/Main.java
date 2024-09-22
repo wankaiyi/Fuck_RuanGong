@@ -34,7 +34,7 @@ public class Main {
     }
 
     private static void generateQuizzes(int numberOfQuestions, int range) {
-        System.out.printf("即将生成题目，题目个数：" + numberOfQuestions + "，数据范围：0~%d\n", range - 1);
+        System.out.printf("即将生成题目，题目个数：" + numberOfQuestions + "，数据范围：0~%d（不包含%d）\n", range, range);
         // 生成 numberOfQuestions 个题目
         Tuple2<List<String>, List<String>> quizAndAnswers = QuizGenerator.generateQuiz(range, numberOfQuestions);
         String generateExercisesFilePath = System.getProperty("user.dir") + "/Exercises.txt";
