@@ -36,7 +36,7 @@
 ## 生成题目
 ### 输出
 #### 控制台输出
-![image](https://github.com/user-attachments/assets/7a3d438c-3244-4d99-b075-2a2487981d94)
+![image](https://github.com/user-attachments/assets/2d474f6a-229a-4c8a-beca-1ef6763d9161)
 
 #### 题目
 ![image](https://github.com/user-attachments/assets/1951205e-7299-4d1f-8205-3eb049197971)
