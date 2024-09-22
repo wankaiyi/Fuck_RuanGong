@@ -26,25 +26,30 @@ public class Main {
             // 判题
             checkExercisesAnswers(argsObj.getExercisesFileName(), argsObj.getAnswerFileName());
 
-            System.out.printf("即将生成题目，题目个数：" + numberOfQuestions + "，数据范围：0~%d\n", range - 1);
-            // 生成 numberOfQuestions 个题目
-            Tuple2<List<String>, List<String>> quizAndAnswers = QuizGenerator.generateQuiz(range, numberOfQuestions);
-            String generateExercisesFilePath = System.getProperty("user.dir") + "/Exercises.txt";
-            String generateAnswerFilePath = System.getProperty("user.dir") + "/Answers.txt";
-
-            // 删除文件
-            File exercisesFile = new File(generateExercisesFilePath);
-            File answerFile = new File(generateAnswerFilePath);
-
-            FileUtils.deleteFileIfExists(exercisesFile.getName());
-            FileUtils.deleteFileIfExists(answerFile.getName());
-
-            // 将题目和答案写入文件
-            FileUtil.writeUtf8Lines(quizAndAnswers.getFirst(), exercisesFile);
-            FileUtil.writeUtf8Lines(quizAndAnswers.getSecond(), answerFile);
+            // 生成题目
+            generateQuizzes(numberOfQuestions, range);
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
+    }
+
+    private static void generateQuizzes(int numberOfQuestions, int range) {
+        System.out.printf("即将生成题目，题目个数：" + numberOfQuestions + "，数据范围：0~%d\n", range - 1);
+        // 生成 numberOfQuestions 个题目
+        Tuple2<List<String>, List<String>> quizAndAnswers = QuizGenerator.generateQuiz(range, numberOfQuestions);
+        String generateExercisesFilePath = System.getProperty("user.dir") + "/Exercises.txt";
+        String generateAnswerFilePath = System.getProperty("user.dir") + "/Answers.txt";
+
+        // 删除文件
+        File exercisesFile = new File(generateExercisesFilePath);
+        File answerFile = new File(generateAnswerFilePath);
+
+        FileUtils.deleteFileIfExists(exercisesFile.getName());
+        FileUtils.deleteFileIfExists(answerFile.getName());
+
+        // 将题目和答案写入文件
+        FileUtil.writeUtf8Lines(quizAndAnswers.getFirst(), exercisesFile);
+        FileUtil.writeUtf8Lines(quizAndAnswers.getSecond(), answerFile);
     }
 
     /**
