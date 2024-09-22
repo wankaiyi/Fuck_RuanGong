@@ -31,7 +31,7 @@ public class QuizGenerator {
     }
 
     /**
-     * 随机生成单个题目
+     * 批量随机生成题目
      *
      * @param range             操作数的大小范围
      * @param numberOfQuestions 最大题目数
