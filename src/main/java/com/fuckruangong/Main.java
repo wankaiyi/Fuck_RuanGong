@@ -60,6 +60,9 @@ public class Main {
         // 将题目和答案写入文件
         FileUtil.writeUtf8Lines(quizAndAnswers.getFirst(), exercisesFile);
         FileUtil.writeUtf8Lines(quizAndAnswers.getSecond(), answerFile);
+
+        System.out.println("题目已生成，文件路径：" + generateExercisesFilePath);
+        System.out.println("答案已生成，文件路径：" + generateAnswerFilePath);
     }
 
     /**
