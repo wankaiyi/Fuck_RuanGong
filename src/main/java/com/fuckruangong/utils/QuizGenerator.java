@@ -34,11 +34,10 @@ public class QuizGenerator {
      * 随机生成单个题目
      *
      * @param range             操作数的大小范围
-     * @param maxOperators      操作符的最大数量
      * @param numberOfQuestions 最大题目数
      * @return 题目，答案
      */
-    public static Tuple2<List<String>, List<String>> generateQuiz(int range, int maxOperators, int numberOfQuestions) {
+    public static Tuple2<List<String>, List<String>> generateQuiz(int range, int numberOfQuestions) {
         int duplicateCount = 0;
         int negativeCount = 0;
         int totalCount = 0;
@@ -46,6 +45,7 @@ public class QuizGenerator {
         List<String> quizzes = new ArrayList<>(numberOfQuestions);
         List<String> answers = new ArrayList<>(numberOfQuestions);
         for (int i = 1; i <= numberOfQuestions; i++) {
+            int maxOperators = generateRandomOperatorCounts();
             while (true) {
                 totalCount++;
                 List<String> operands = new ArrayList<>();
