@@ -13,21 +13,31 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class Main {
 
     public static void main(String[] args) {
+        int num = 0;
         try {
             // 校验参数
             Args argsObj = ValidationUtils.validateArgs(args);
             int numberOfQuestions = argsObj.getNumberOfQuestions();
+            num = numberOfQuestions;
             int range = argsObj.getRange();
 
             // 判题
             checkExercisesAnswers(argsObj.getExercisesFileName(), argsObj.getAnswerFileName());
 
             // 生成题目
-            generateQuizzes(numberOfQuestions, range);
+            CompletableFuture<Void> task = CompletableFuture.runAsync(() -> generateQuizzes(numberOfQuestions, range));
+
+            // 5秒超时
+            task.get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            System.err.println("数据范围不支持生成" + num + "道题，请调整参数！");
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
